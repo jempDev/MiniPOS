@@ -1,0 +1,90 @@
+@startuml miniPos
+
+class Producto {
+  +int ID_Producto
+  +string Nombre
+  +string Descripción
+  +float PrecioUnidad
+  +float PrecioGramo
+  +string UnidadMedida
+
+  +calcularPrecioPorCantidad(cantidad: float): float
+  +aplicarPromocion(promocion: Promocion): float
+  +actualizarDatos(nombre, descripcion, precioUnidad, precioGramo, unidadMedida)
+  +obtenerInfo(): string
+}
+
+class Inventario {
+  +int ID_Inventario
+  +int ID_Producto
+
+  +actualizarStock(cantidad: int)
+  +consultarStock(): int
+  +estaDisponible(cantidad: int): bool
+}
+
+class Venta {
+  +int ID_Venta
+  +date Fecha
+  +float Total
+  +int ID_Usuario
+
+  +agregarDetalle(detalle: DetalleVenta)
+  +calcularTotal(): float
+  +registrarVenta()
+  +generarRecibo(): string
+}
+
+class DetalleVenta {
+  +int ID_Detalle
+  +int ID_Venta
+  +int ID_Producto
+  +int CantidadVendida
+  +string TipoVenta
+  +float PrecioUnitario
+  +float Subtotal
+
+  +calcularSubtotal(): float
+  +aplicarTipoVenta(tipo: string)
+  +obtenerDetalle(): string
+}
+
+class Promocion {
+  +int ID_Promocion
+  +string Descripción
+  +string TipoPromocion
+  +float MontoDescuento
+
+  +aplicarDescuento(precioOriginal: float): float
+  +esValida(): bool
+  +obtenerDescripcion(): string
+}
+
+class ProductoPromocion {
+  +int ID_Producto
+  +int ID_Promocion
+
+  +asociarProducto(producto: Producto)
+  +asociarPromocion(promocion: Promocion)
+  +eliminarAsociacion()
+}
+
+class Usuario {
+  +int ID_Usuario
+  +string Nombre
+  +string Rol
+
+  +validarCredenciales(usuario, contraseña): bool
+  +tieneRol(rol: string): bool
+  +registrarUsuario()
+  +actualizarPerfil(nombre, rol)
+  +obtenerInfo(): string
+}
+
+Producto "1" -- "0..*" Inventario : tiene
+Venta "1" -- "0..*" DetalleVenta : incluye
+DetalleVenta "*" -- "1" Producto : refiere
+Producto "1" -- "0..*" ProductoPromocion : tiene
+Promocion "1" -- "0..*" ProductoPromocion : aplica
+Venta "1" -- "1" Usuario : realizada_por
+@enduml

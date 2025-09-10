@@ -1,0 +1,31 @@
+@startuml MiniPOS
+actor Usuario
+participant Venta
+participant DetalleVenta
+participant Producto
+participant Promocion
+
+Usuario -> Venta : registrarVenta()
+activate Venta
+
+Usuario -> Venta : agregarDetalle(producto, cantidad)
+Venta -> DetalleVenta : crearDetalle(producto, cantidad)
+activate DetalleVenta
+
+DetalleVenta -> Producto : obtenerInfo()
+Producto --> DetalleVenta : datosProducto
+
+DetalleVenta -> Promocion : aplicarDescuento(precioOriginal)
+Promocion --> DetalleVenta : precioConDescuento
+
+DetalleVenta -> DetalleVenta : calcularSubtotal()
+DetalleVenta --> Venta : subtotal
+deactivate DetalleVenta
+
+Venta -> Venta : calcularTotal()
+Venta --> Usuario : total calculado
+
+Usuario -> Venta : generarRecibo()
+Venta --> Usuario : recibo
+deactivate Venta
+@enduml
